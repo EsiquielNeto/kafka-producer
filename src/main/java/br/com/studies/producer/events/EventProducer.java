@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import javax.swing.text.DateFormatter;
@@ -30,7 +31,7 @@ public class EventProducer {
         var key = date + "__" + UUID.randomUUID();
         var message = "Hello -- " + date;
 
-        ProducerRecord<String, String> record = new ProducerRecord("EVENT_REGISTER", key, message);
+        ProducerRecord<String, String> record = new ProducerRecord<>("mytopic", key, message);
         producer.send(record);
         producer.flush();
         producer.close();
@@ -42,7 +43,7 @@ public class EventProducer {
         var properties = new Properties();
         properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
         properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:19092");
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9093");
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
